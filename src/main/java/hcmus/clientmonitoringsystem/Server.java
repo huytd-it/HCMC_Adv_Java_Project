@@ -4,61 +4,72 @@ import java.io.*;
 import java.net.*;
 
 public class Server {
-  public static void main(String arg[])
-	{
-		try
-		{
-			ServerSocket s = new ServerSocket(3200);
-			
-			do
-			{
+
+	private ServerSocket serverSocket;
+	private Socket connectedSocket;
+	private PrintWriter out;
+	private BufferedReader in;
+
+	public void startServer(int port) throws IOException {
+		try {
+			serverSocket = new ServerSocket(port);
+		
+			do {
 				System.out.println("Waiting for a Client");
-			
-				Socket ss=s.accept(); //synchronous
-				
-			
-				
+
+				connectedSocket = serverSocket.accept(); // synchronous
+				InetSocketAddress socketAddress = (InetSocketAddress) connectedSocket.getRemoteSocketAddress();
+				String clientIpAddress = socketAddress.getAddress()
+						.getHostAddress();
+				System.out.println("IP address of the connected client :: " + clientIpAddress);
 				System.out.println("Talking to client");
-				System.out.println(ss.getPort());
-				
-				InputStream is=ss.getInputStream();
-				BufferedReader br=new BufferedReader(new InputStreamReader(is));
-				
-				OutputStream os=ss.getOutputStream();
+				System.out.println(connectedSocket.getPort());
+
+				InputStream is = connectedSocket.getInputStream();
+				BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+				OutputStream os = connectedSocket.getOutputStream();
 				BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
-				
-				
+
 				String receivedMessage;
-				
-				do
-				{
-					receivedMessage=br.readLine();
+
+				do {
+					receivedMessage = br.readLine();
 					System.out.println("Received : " + receivedMessage);
-					if (receivedMessage.equalsIgnoreCase("quit"))
-					{
+					if (receivedMessage.equalsIgnoreCase("quit")) {
 						System.out.println("Client has left !");
 						break;
-					}
-					else
-					{
-						DataInputStream din=new DataInputStream(System.in);
+					} else {
+						DataInputStream din = new DataInputStream(System.in);
 						String k = din.readLine();
 						bw.write(k);
 						bw.newLine();
 						bw.flush();
 					}
-				}
-				while (true);
+				} while (true);
 				bw.close();
 				br.close();
-			}
-			while (true);
-			
-		}
-		catch(IOException e)
-		{
+			} while (true);
+
+		} catch (IOException e) {
 			System.out.println("Error: " + e.getMessage());
 			System.out.println("There're some error");
 		}
+
+	}
+
+	private void closeIO() throws IOException {
+		in.close();
+		out.close();
+	}
+
+	private void stopServer() throws IOException {
+		connectedSocket.close();
+		serverSocket.close();
+	}
+
+	public static void main(String[] args) throws IOException {
+		Server server = new Server();
+		server.startServer(5000);
 	}
 }
