@@ -7,31 +7,31 @@ public class Client {
 	private Socket clientSocket;
 	private PrintWriter out;
 	private BufferedReader in;
+	private BufferedWriter bw;
+	private BufferedReader br;
+	private String sentMessage = "";
+	private String receivedMessage;
 
 	public void connect(String ip, int port) throws IOException {
 
 		try {
-			Socket s = new Socket(ip, port);
-			System.out.println(s.getPort());
+			clientSocket = new Socket(ip, port);
+			System.out.println(clientSocket.getPort());
 
-			InputStream is = s.getInputStream();
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			InputStream is = clientSocket.getInputStream();
+			br = new BufferedReader(new InputStreamReader(is));
 
-			OutputStream os = s.getOutputStream();
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
+			OutputStream os = clientSocket.getOutputStream();
+			bw = new BufferedWriter(new OutputStreamWriter(os));
 
-			String sentMessage = "";
-			String receivedMessage;
+			
 
 			System.out.println("Talking to Server");
 
 			do {
 				DataInputStream din = new DataInputStream(System.in);
 				sentMessage = din.readLine();
-				bw.write(sentMessage);
-				bw.newLine();
-				bw.flush();
-
+				send(sentMessage);
 				if (sentMessage.equalsIgnoreCase("quit"))
 					break;
 				else {
@@ -51,9 +51,9 @@ public class Client {
 	}
 
 	public void send(String msg) throws IOException {
-		System.out.println(msg);
-		String reply = in.readLine();
-		out.println("Replay receive from Server" + reply);
+		bw.write(sentMessage);
+		bw.newLine();
+		bw.flush();
 	}
 
 	public void disconnect() throws IOException {
