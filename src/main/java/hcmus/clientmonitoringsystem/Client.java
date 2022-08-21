@@ -15,17 +15,8 @@ public class Client {
 	public void connect(String ip, int port) throws IOException {
 
 		try {
-			clientSocket = new Socket(ip, port);
+			this.clientSocket = new Socket(ip, port);
 			System.out.println(clientSocket.getPort());
-
-			InputStream is = clientSocket.getInputStream();
-			br = new BufferedReader(new InputStreamReader(is));
-
-			OutputStream os = clientSocket.getOutputStream();
-			bw = new BufferedWriter(new OutputStreamWriter(os));
-
-			
-
 			System.out.println("Talking to Server");
 
 			do {
@@ -51,6 +42,12 @@ public class Client {
 	}
 
 	public void send(String msg) throws IOException {
+		InputStream is = clientSocket.getInputStream();
+		br = new BufferedReader(new InputStreamReader(is));
+
+		OutputStream os = clientSocket.getOutputStream();
+		bw = new BufferedWriter(new OutputStreamWriter(os));
+
 		bw.write(sentMessage);
 		bw.newLine();
 		bw.flush();

@@ -4,12 +4,17 @@
  */
 package hcmus.clientmonitoringsystem;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Huy
  */
-public class ClientFrame extends javax.swing.JFrame {
 
+public class ClientFrame extends javax.swing.JFrame {
+    private Client client;
     /**
      * Creates new form ClientFrame
      */
@@ -36,6 +41,11 @@ public class ClientFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         connectServer.setText("Connect");
+        connectServer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connectServerActionPerformed(evt);
+            }
+        });
 
         ipServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -104,6 +114,15 @@ public class ClientFrame extends javax.swing.JFrame {
     private void portServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portServerActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_portServerActionPerformed
+
+    private void connectServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectServerActionPerformed
+        client = new Client();
+        try {
+            client.connect(ipServer.getText(),Integer.parseInt(portServer.getText()));
+        } catch (IOException ex) {
+            Logger.getLogger(ClientFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_connectServerActionPerformed
 
     /**
      * @param args the command line arguments
