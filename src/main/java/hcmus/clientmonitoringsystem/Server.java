@@ -1,6 +1,7 @@
 package hcmus.clientmonitoringsystem;
 
 import java.io.*;
+import java.lang.System.Logger;
 import java.net.*;
 
 public class Server {
@@ -9,6 +10,8 @@ public class Server {
 	private Socket connectedSocket;
 	private PrintWriter out;
 	private BufferedReader in;
+	private InetAddress ip;
+	private String port;
 
 	public void startServer(int port) throws IOException {
 		try {
@@ -21,9 +24,10 @@ public class Server {
 				InetSocketAddress socketAddress = (InetSocketAddress) connectedSocket.getRemoteSocketAddress();
 				String clientIpAddress = socketAddress.getAddress()
 						.getHostAddress();
-				System.out.println("IP address of the connected client :: " + clientIpAddress);
+			
 				System.out.println("Talking to client");
-				System.out.println(connectedSocket.getPort());
+				ip = InetAddress.getLocalHost();
+				System.out.println(ip.getHostAddress());
 
 				InputStream is = connectedSocket.getInputStream();
 				BufferedReader br = new BufferedReader(new InputStreamReader(is));

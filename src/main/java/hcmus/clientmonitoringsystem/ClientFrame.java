@@ -118,7 +118,9 @@ public class ClientFrame extends javax.swing.JFrame {
     private void connectServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connectServerActionPerformed
         client = new Client();
         try {
+            // Logger.getLogger(ClientFrame.class.getName()).info(ipServer.getText() + portServer.getText());
             client.connect(ipServer.getText(),Integer.parseInt(portServer.getText()));
+            
         } catch (IOException ex) {
             Logger.getLogger(ClientFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
